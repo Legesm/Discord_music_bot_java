@@ -32,11 +32,21 @@ public class PlayerManager {
         scheduler = new TrackScheduler(player);
         player.addListener(scheduler);
     }
-
     public void play(String input) {
         String query = input;
 
-        if (!input.startsWith("http")) {
+        if (input.contains("youtube.com") || input.contains("youtu.be")) {
+
+            String audioUrl = YtDlpUtil.getAudioUrl(input);
+
+            if (audioUrl == null) {
+                System.out.println("[YT-DLP] Failed to extract audio");
+                return;
+            }
+
+            query = audioUrl;
+
+        } else if (!input.startsWith("http")) {
             query = "ytsearch:" + input;
         }
 
